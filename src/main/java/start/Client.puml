@@ -1,0 +1,68 @@
+@startuml
+ClientBLL *-- ClientDAO
+ClientDAO o- Client
+ class Bill<<Record>> {
+    -String productName
+    -int amout
+    -int clientId
+ }
+class Client {
+    -int id
+    -String name
+    -String address
+    -String email
+    -int age
+}
+class ClientBLL {
+    -Private ClientDAO clientDAO
+    +List<Client> getAllClients()
+    +void createClient(Client client)
+    +void updateClient(Client client)
+    +void deleteClient(Client client)
+}
+class ClientDAO extends AbstractDAO {
+}
+class AbstractDAO<T> {
+    #Logger #Logger
+    -Class<T> type
+   +List<T> findAll()
+   +T findById(int id)
+   +T insert(T t)
+   +T update(T t)
+   +void deleteById(int id)
+
+}
+ProductBLL *-- ProductDAO
+ProductDAO o- Product
+class Product {
+    -int id
+    -String name
+    -int quantity
+}
+class ProductBLL {
+    -Private ProductDAO productDAO
+    +List<Product> getAllProducts()
+    +void createProduct(Product p)
+    +void updateProduct(Product p)
+    +void deleteProduct(Product p)
+}
+class ProductDAO extends AbstractDAO {
+}
+PurchaseBLL *--- PurchaseDAO
+PurchaseDAO o-- Purchase
+class Purchase {
+    -int id
+    -int clientId
+    -int productId
+    -int amount
+}
+class PurchaseBLL {
+    -Private Purchase purchaseDAO
+    +List<Purchase> getAllPurchases()
+    +void createPurchase(Purchase p)
+    +void updatePurchase(Purchase p)
+    +void deletePurchase(Purchase p)
+}
+class PurchaseDAO extends AbstractDAO {
+}
+@enduml
