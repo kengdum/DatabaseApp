@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Vector;
 
 public class ClientView extends JFrame {
     private JComboBox<String> crudComboBox;
@@ -74,8 +73,10 @@ public class ClientView extends JFrame {
         buttonPanel.add(actionButton);
         buttonPanel.add(backButton);
 
-        // Create the table model
-        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "Address", "Email", "Age"}, 0);
+
+        String[] columnNames = getColumnNames(Client.class);
+
+        tableModel = new DefaultTableModel(columnNames, 0);
         clientTable = new JTable(tableModel);
 
         JScrollPane tableScrollPane = new JScrollPane(clientTable);
@@ -85,7 +86,6 @@ public class ClientView extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
         displayAllClients();
 
-        // Add action listener to the back button
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
@@ -108,7 +108,6 @@ public class ClientView extends JFrame {
                     case "Delete":
                         deleteClient();
                         displayAllClients();
-                        // Implement delete logic
                         break;
                 }
             }
@@ -125,10 +124,8 @@ public class ClientView extends JFrame {
             String email = emailTextField.getText();
             int age = Integer.parseInt(ageTextField.getText());
 
-            // Create a new client object
             Client client = new Client(id, name, address, email, age);
 
-            // Call the createClient method in the ClientBLL
             ClientBLL clientBLL = new ClientBLL();
             clientBLL.createClient(client);
             clearInputFields();
@@ -141,6 +138,7 @@ public class ClientView extends JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
+
     private void deleteClient() {
         try {
             int id = Integer.parseInt(idTextField.getText());
@@ -154,6 +152,7 @@ public class ClientView extends JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
+
     private void updateClient() {
         try {
             int id = Integer.parseInt(idTextField.getText());
@@ -162,19 +161,19 @@ public class ClientView extends JFrame {
             Client client = clientBLL.findClientById(id);
 
             String name = nameTextField.getText();
-            if (!name.equals("")) {
+            if (!name.isEmpty()) {
                 client.setName(name);
             }
             String address = addressTextField.getText();
-            if (!address.equals("")) {
+            if (!address.isEmpty()) {
                 client.setAddress(address);
             }
             String email = emailTextField.getText();
-            if (!email.equals("")) {
+            if (!email.isEmpty()) {
                 client.setEmail(email);
             }
             String ageText = ageTextField.getText();
-            if (!ageText.equals("")) {
+            if (!ageText.isEmpty()) {
                 int age = Integer.parseInt(ageText);
                 client.setAge(age);
             }
@@ -187,6 +186,7 @@ public class ClientView extends JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
+
     private void clearInputFields() {
         idTextField.setText("");
         nameTextField.setText("");
@@ -201,15 +201,14 @@ public class ClientView extends JFrame {
         ClientBLL clientBLL = new ClientBLL();
         List<Client> clients = clientBLL.getAllClients();
         displayAllObjects(clients);
-
     }
+
     private <T> void displayAllObjects(List<T> objects) {
         DefaultTableModel model = (DefaultTableModel) clientTable.getModel();
         model.setRowCount(0);
 
         for (Object object : objects) {
-            Class<?> objectClass = object.getClass();
-            Field[] fields = objectClass.getDeclaredFields();
+            Field[] fields = object.getClass().getDeclaredFields();
 
             Object[] rowData = new Object[fields.length];
             for (int i = 0; i < fields.length; i++) {
@@ -226,4 +225,14 @@ public class ClientView extends JFrame {
         }
     }
 
+    private String[] getColumnNames(Class<?> clazz) {
+        Field[] fields = clazz.getDeclaredFields();
+        String[] columnNames = new String[fields.length];
+
+        for (int i = 0; i < fields.length; i++) {
+            columnNames[i] = fields[i].getName();
+        }
+
+        return columnNames;
+    }
 }

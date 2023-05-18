@@ -20,15 +20,12 @@ public class PrincipalView extends JFrame {
         productButton = new JButton("Product");
         purchaseButton = new JButton("Purchase");
 
-        // Set the layout for the frame
         setLayout(new FlowLayout());
 
-        // Add buttons to the frame
         add(clientButton);
         add(productButton);
         add(purchaseButton);
 
-        // Add action listeners to the buttons
         clientButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 openClientFrame();
@@ -49,28 +46,22 @@ public class PrincipalView extends JFrame {
 
 
 
-    // Method to open the client frame
     private void openClientFrame() {
-        // Create and display the client frame
         ClientView clientView = new ClientView();
         clientView.setVisible(true);
-        setVisible(false); // Hide the principal frame
+        setVisible(false);
     }
 
-    // Method to open the product frame
     private void openProductFrame() {
-        // Create and display the product frame
         ProductView productView = new ProductView();
         productView.setVisible(true);
-        setVisible(false); // Hide the principal frame
+        setVisible(false);
     }
 
-    // Method to open the purchase frame
     private void openPurchaseFrame() {
-        // Create and display the purchase frame
         PurchaseView purchaseView = new PurchaseView();
         purchaseView.setVisible(true);
-        setVisible(false); // Hide the principal frame
+        setVisible(false);
     }
 
 }

@@ -1,6 +1,7 @@
 package presentation;
 
 import bll.ProductBLL;
+import model.Client;
 import model.Product;
 
 import javax.swing.*;
@@ -61,8 +62,9 @@ public class ProductView extends JFrame {
         buttonPanel.add(actionButton);
         buttonPanel.add(backButton);
 
-        // Create the table model
-        tableModel = new DefaultTableModel(new String[]{"ID", "Quantity", "Name"}, 0);
+        String[] columnNames = getColumnNames(Client.class);
+
+        tableModel = new DefaultTableModel(columnNames, 0);
         productTable = new JTable(tableModel);
 
         JScrollPane tableScrollPane = new JScrollPane(productTable);
@@ -199,6 +201,15 @@ public class ProductView extends JFrame {
 
             model.addRow(rowData);
         }
+    }
+    private String[] getColumnNames(Class<?> clazz) {
+        Field[] fields = clazz.getDeclaredFields();
+        String[] columnNames = new String[fields.length];
+
+        for (int i = 0; i < fields.length; i++) {
+            columnNames[i] = fields[i].getName();
+        }
+        return columnNames;
     }
 
 }

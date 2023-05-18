@@ -1,6 +1,7 @@
 package presentation;
 
 import bll.PurchaseBLL;
+import model.Client;
 import model.Purchase;
 
 import javax.swing.*;
@@ -68,7 +69,9 @@ public class PurchaseView extends JFrame {
         buttonPanel.add(backButton);
 
         // Create the table model
-        tableModel = new DefaultTableModel(new String[]{"ID", "Client ID", "Product ID", "Amount"}, 0);
+        String[] columnNames = getColumnNames(Client.class);
+
+        tableModel = new DefaultTableModel(columnNames, 0);
         purchaseTable = new JTable(tableModel);
 
         JScrollPane tableScrollPane = new JScrollPane(purchaseTable);
@@ -215,6 +218,15 @@ public class PurchaseView extends JFrame {
 
             model.addRow(rowData);
         }
+    }
+    private String[] getColumnNames(Class<?> clazz) {
+        Field[] fields = clazz.getDeclaredFields();
+        String[] columnNames = new String[fields.length];
+
+        for (int i = 0; i < fields.length; i++) {
+            columnNames[i] = fields[i].getName();
+        }
+        return columnNames;
     }
 }
 
